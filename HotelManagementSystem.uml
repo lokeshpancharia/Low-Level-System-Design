@@ -1,0 +1,40 @@
+@startuml
+class Hotel {
+    - rooms: []Room
+    - guests: []Guest
+    - bookings: []Booking
+    + checkAvailability(roomType: string, checkInDate: Date, checkOutDate: Date) : bool
+    + makeBooking(guest: Guest, room: Room, checkInDate: Date, checkOutDate: Date) : Booking
+    + cancelBooking(booking: Booking)
+    + checkOut(booking: Booking)
+}
+
+class Room {
+    - roomNumber: int
+    - roomType: string
+    - isAvailable: bool
+    - bookings: []Booking
+    + updateAvailability(status: bool)
+}
+
+class Guest {
+    - guestId: int
+    - name: string
+    - contactInfo: string
+}
+
+class Booking {
+    - bookingId: int
+    - guest: Guest
+    - room: Room
+    - checkInDate: Date
+    - checkOutDate: Date
+    - status: string
+}
+
+Hotel "1" -- "*" Room
+Hotel "1" -- "*" Guest
+Hotel "1" -- "*" Booking
+Room "1" -- "*" Booking
+Guest "1" -- "*" Booking
+@enduml

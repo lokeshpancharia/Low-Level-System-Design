@@ -1,0 +1,46 @@
+@startuml
+class Building {
+    - floors: []Floor
+    - elevators: []Elevator
+    + requestElevator(request: ElevatorRequest) : Elevator
+}
+
+class Floor {
+    - floorNumber: int
+    - upRequests: []Request
+    - downRequests: []Request
+    + addRequest(request: Request)
+    + removeRequest(request: Request)
+}
+
+class Elevator {
+    - elevatorId: int
+    - currentFloor: int
+    - direction: string
+    - requests: []Request
+    + moveToFloor(floorNumber: int)
+    + processRequest(request: Request)
+    + addRequest(request: Request)
+}
+
+class Request {
+    - floorNumber: int
+    - direction: string
+}
+
+Building "1" -- "*" Floor
+Building "1" -- "*" Elevator
+Floor "1" -- "*" Request
+Elevator "1" -- "*" Request
+@enduml
+
+
+/* 
+1. instea of floor array of ups and dows request use just bool up request and down request 
+2. requests can be divided into floorRequest ( up or down only) and LiftRequest( floor number )
+
+Algo 
+1. Nearest Elevator: Choose the elevator closest to the requested floor.
+2. Look Algorithm: Move in one direction until all requests in that direction are handled, then reverse direction.
+3. SCAN Algorithm: Similar to Look but also handles the reversal of direction and considers requests on the way back.
+4. Round Robin: Distribute requests evenly among elevators, which can be modified to include more sophisticated load balancing.

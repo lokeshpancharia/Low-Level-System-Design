@@ -1,0 +1,87 @@
+@startuml
+class Driver {
+    - driverId: int
+    - name: string
+    - vehicleInfo: Vehicle
+    - currentLocation: Location
+    - isAvailable: bool
+    - rating: float
+    + updateLocation(location: Location)
+    + acceptRide(ride: Ride)
+    + completeRide(ride: Ride)
+}
+
+class Rider {
+    - riderId: int
+    - name: string
+    - paymentInfo: Payment
+    - currentLocation: Location
+    + requestRide(pickup: Location, dropoff: Location) : Ride
+    + cancelRide(ride: Ride)
+    + makePayment(ride: Ride)
+}
+
+class Ride {
+    - rideId: int
+    - rider: Rider
+    - driver: Driver
+    - pickupLocation: Location
+    - dropoffLocation: Location
+    - status: string
+    - fare: float
+    + updateStatus(status: string)
+}
+
+class Vehicle {
+    - vehicleId: int
+    - make: string
+    - model: string
+    - licensePlate: string
+}
+
+class Location {
+    - latitude: float
+    - longitude: float
+}
+
+class Payment {
+    - paymentId: int
+    - paymentMethod: string
+    - amount: float
+    + processPayment(amount: float)
+}
+
+Driver "1" -- "1" Vehicle
+Driver "0..1" -- "*" Ride
+Rider "1" -- "*" Ride
+Ride "1" -- "1" Rider
+Ride "0..1" -- "1" Driver
+Rider "1" -- "1" Payment
+@enduml
+
+
+Algorithm for Matching
+Matching Algorithms:
+
+Greedy Algorithm: Match the closest available driver to the rider based on their current locations.
+Weighted Matching: Consider factors like driver rating, estimated time of arrival (ETA), and ride fare to find the optimal match.
+Bipartite Graph Matching: Use algorithms like the Hungarian algorithm to match riders and drivers optimally, considering multiple factors.
+Algorithm Choice:
+
+Geospatial Indexing: Use spatial data structures like k-d trees or quadtrees to efficiently query the nearest drivers based on the rider’s location.
+Real-time Adjustments: Continuously update driver locations and availability to provide real-time matching.
+Request Management
+Ride Requests:
+
+Request Handling: When a rider requests a ride, create a new Ride object and use the matching algorithm to find an available driver.
+Real-time Updates: Use WebSockets or similar technologies to provide real-time updates to riders and drivers about ride status.
+Cancellations:
+
+Cancellation Policies: Implement policies for riders and drivers to cancel rides, including possible penalties.
+Real-time Handling: Update the Ride status to "canceled" and notify both parties in real-time.
+Payments:
+
+Payment Processing: Use the Payment class to process payments securely. Integrate with payment gateways to handle transactions.
+Fare Calculation: Calculate the fare based on distance, time, and dynamic pricing models. Update the Ride object with the fare details.
+Post-Ride Payment: Upon ride completion, trigger the payment process and update the ride status to "completed."
+By structuring the entities and their interactions in this way, we ensure a robust and scalable design for a ride-sharing service that handles real-time matching, request management, and payment processing efficiently.
