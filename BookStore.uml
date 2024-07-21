@@ -1,0 +1,59 @@
+@startuml
+class Book {
+    - int id
+    - string title
+    - string author
+    - string subject
+    - float price
+    - int stock
+    + updateStock(int quantity)
+}
+
+class Patron {
+    - int id
+    - string name
+    - string email
+    - string address
+    - string paymentDetails
+}
+
+class Order {
+    - int orderId
+    - Patron patron
+    - List<Book> books
+    - float totalAmount
+    - string status
+    - string paymentMethod
+    + processPayment() : bool
+    + fulfillOrder()
+}
+
+class BookInventory {
+    - Map<int, Book> books
+    + searchBooksByTitle(string title) : List<Book>
+    + searchBooksByAuthor(string author) : List<Book>
+    + searchBooksBySubject(string subject) : List<Book>
+    + updateStock(int bookId, int quantity)
+    + checkStock(int bookId) : int
+    + restockBook(int bookId, int quantity)
+}
+
+class PaymentProcessor {
+    + processPayment(Patron patron, float amount, string paymentMethod) : bool
+}
+
+class BookstoreService {
+    + rpc SearchBooks(SearchBooksRequest) returns (SearchBooksResponse)
+    + rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse)
+    + rpc CheckStock(CheckStockRequest) returns (CheckStockResponse)
+    + rpc UpdateStock(UpdateStockRequest) returns (UpdateStockResponse)
+}
+
+Patron "1" -- "0..*" Order
+Order "1" -- "0..*" Book
+BookInventory "1" -- "*" Book
+Order "1" -- "1" PaymentProcessor
+BookstoreService "1" -- "1" BookInventory
+BookstoreService "1" -- "1" PaymentProcessor
+
+@enduml

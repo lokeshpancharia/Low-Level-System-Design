@@ -1,0 +1,54 @@
+@startuml
+class Book {
+    - int id
+    - string title
+    - string author
+    - string subject
+    - bool isAvailable
+}
+
+class Member {
+    - int id
+    - string name
+    - string email
+    - string address
+    + borrowBook(Book book)
+    + returnBook(Book book)
+}
+
+class Loan {
+    - int loanId
+    - Member member
+    - Book book
+    - Date issueDate
+    - Date dueDate
+    - Date returnDate
+    + calculateFine() : float
+}
+
+class Library {
+    - Map<int, Book> books
+    - Map<int, Member> members
+    - Map<int, Loan> loans
+    + searchBooksByTitle(string title) : List<Book>
+    + searchBooksByAuthor(string author) : List<Book>
+    + searchBooksBySubject(string subject) : List<Book>
+    + issueBook(int memberId, int bookId) : Loan
+    + returnBook(int loanId)
+    + checkOverdueLoans() : List<Loan>
+}
+
+class NotificationService {
+    + sendReminder(Member member, Loan loan)
+    + sendFine(Member member, Loan loan)
+}
+
+Library "1" -- "*" Book
+Library "1" -- "*" Member
+Library "1" -- "*" Loan
+Loan "1" -- "1" Book
+Loan "1" -- "1" Member
+Library "1" -- "1" NotificationService
+NotificationService "1" -- "1" Member
+
+@enduml

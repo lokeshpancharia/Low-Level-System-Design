@@ -1,0 +1,52 @@
+@startuml
+class ParkingLotService {
+    + rpc ParkVehicle(ParkVehicleRequest) returns (ParkVehicleResponse)
+    + rpc UnparkVehicle(UnparkVehicleRequest) returns (UnparkVehicleResponse)
+    + rpc CheckAvailability(CheckAvailabilityRequest) returns (CheckAvailabilityResponse)
+}
+
+class ParkingLot {
+    - levels: []Level
+    - ticketCounter: int
+    - tickets: map[int]ParkingTicket
+    + findAvailableSlot(vehicleType: string) : (Level, ParkingSlot)
+    + parkVehicle(vehicle: Vehicle) : ParkingTicket
+    + unparkVehicle(ticketId: int) : ParkingTicket
+}
+
+class Level {
+    - floorNumber: int
+    - slots: []ParkingSlot
+    + findAvailableSlot(vehicleType: string) : ParkingSlot
+    + parkVehicle(slot: ParkingSlot, vehicle: Vehicle)
+    + unparkVehicle(slot: ParkingSlot)
+}
+
+class ParkingSlot {
+    - slotNumber: int
+    - slotType: string
+    - isOccupied: bool
+    - vehicle: Vehicle
+    + assignVehicle(vehicle: Vehicle)
+    + removeVehicle()
+}
+
+class Vehicle {
+    - licensePlate: string
+    - vehicleType: string
+}
+
+class ParkingTicket {
+    - ticketId: int
+    - vehicle: Vehicle
+    - slot: ParkingSlot
+}
+
+ParkingLotService "1" -- "1" ParkingLot
+ParkingLot "1" -- "*" Level
+Level "1" -- "*" ParkingSlot
+ParkingSlot "1" -- "0..1" Vehicle
+ParkingTicket "1" -- "1" Vehicle
+ParkingTicket "1" -- "1" ParkingSlot
+
+@enduml

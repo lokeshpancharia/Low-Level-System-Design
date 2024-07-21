@@ -1,0 +1,67 @@
+@startuml
+class Movie {
+    - int id
+    - string title
+    - string genre
+    - int duration
+    - List<Show> shows
+}
+
+class Theatre {
+    - int id
+    - string name
+    - string location
+    - List<Screen> screens
+}
+
+class Screen {
+    - int id
+    - int capacity
+    - List<Show> shows
+}
+
+class Show {
+    - int id
+    - DateTime startTime
+    - DateTime endTime
+    - int availableSeats
+    - Screen screen
+    - Movie movie
+}
+
+class Ticket {
+    - int id
+    - Show show
+    - List<Seat> seats
+    - User user
+    - float totalPrice
+}
+
+class Seat {
+    - int seatNumber
+    - bool isAvailable
+}
+
+class User {
+    - int id
+    - string name
+    - string email
+    - string phone
+}
+
+class BookingService {
+    + rpc SearchMovies(SearchMoviesRequest) returns (SearchMoviesResponse)
+    + rpc GetShowTimes(GetShowTimesRequest) returns (GetShowTimesResponse)
+    + rpc BookTickets(BookTicketsRequest) returns (BookTicketsResponse)
+    + rpc CancelTickets(CancelTicketsRequest) returns (CancelTicketsResponse)
+}
+
+Movie "1" -- "*" Show
+Theatre "1" -- "*" Screen
+Screen "1" -- "*" Show
+Show "1" -- "*" Ticket
+Ticket "1" -- "*" Seat
+Show "1" -- "*" Seat
+Ticket "1" -- "1" User
+
+@enduml

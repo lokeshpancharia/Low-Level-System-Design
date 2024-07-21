@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package library;
+
+service LibraryService {
+    rpc SearchBooks(SearchBooksRequest) returns (SearchBooksResponse);
+    rpc BorrowBook(BorrowBookRequest) returns (BorrowBookResponse);
+    rpc ReturnBook(ReturnBookRequest) returns (ReturnBookResponse);
+    rpc CheckOverdueLoans(CheckOverdueLoansRequest) returns (CheckOverdueLoansResponse);
+    rpc SendReminder(SendReminderRequest) returns (SendReminderResponse);
+    rpc SendFine(SendFineRequest) returns (SendFineResponse);
+}
+
+message SearchBooksRequest {
+    string query = 1;
+    string searchBy = 2; // title, author, subject
+}
+
+message SearchBooksResponse {
+    repeated Book books = 1;
+}
+
+message BorrowBookRequest {
+    int32 member_id = 1;
+    int32 book_id = 2;
+}
+
+message BorrowBookResponse {
+    int32 loan_id = 1;
+    string status = 2;
+}
+
+message ReturnBookRequest {
+    int32 loan_id = 1;
+}
+
+message ReturnBookResponse {
+    string status = 1;
+}
+
+message CheckOverdueLoansRequest {}
+
+message CheckOverdueLoansResponse {
+    repeated Loan overdueLoans = 1;
+}
+
+message SendReminderRequest {
+    int32 member_id = 1;
+    int32 loan_id = 2;
+}
+
+message SendReminderResponse {
+    string status = 1;
+}
+
+message SendFineRequest {
+    int32 member_id = 1;
+    int32 loan_id = 2;
+}
+
+message SendFineResponse {
+    string status = 1;
+}
+
+message Book {
+    int32 id = 1;
+    string title = 2;
+    string author = 3;
+    string subject = 4;
+    bool isAvailable = 5;
+}
+
+message Member {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string address = 4;
+}
+
+message Loan {
+    int32 loan_id = 1;
+    Member member = 2;
+    Book book = 3;
+    string issueDate = 4;
+    string dueDate = 5;
+    string returnDate = 6;
+    float fineAmount = 7;
+}
